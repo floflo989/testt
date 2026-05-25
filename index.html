@@ -511,8 +511,8 @@
     <p class="presets-label">Configurations prédéfinies</p>
     <div class="presets">
       <button class="preset-btn active" onclick="setPreset('custom',this)">⚙ Personnalisé</button>
-	  <button class="preset-btn" onclick="setPreset('budget',this)">📁 Bureautique</button>
-      <button class="preset-btn" onclick="setPreset('budget',this)">🎮 Budget 1080p</button
+	  <button class="preset-btn" onclick="setPreset('bur',this)">📁 Bureautique</button>
+      <button class="preset-btn" onclick="setPreset('budget',this)">🎮 Budget 1080p</button>
       <button class="preset-btn" onclick="setPreset('mid',this)">🔥 Équilibré 1440p</button>
       <button class="preset-btn" onclick="setPreset('high',this)">⚡ High-end 4K</button>
       <button class="preset-btn" onclick="setPreset('ultra',this)">💎 Ultra / Créateur</button>
@@ -759,6 +759,7 @@
     Object.keys(DB).forEach(k => state[k] = "none");
 
     const presets = {
+      bur: { cpu:"r5-5600", motherboard:"b450-msi", ram:"16-ddr4-3200", gpu:"rtx5060", storage:"ssd-512-gen4", psu:"650w-gold", cooling:"air-assassin", case:"case-nzxt-h5" },
       budget: { cpu:"r5-5600", motherboard:"b450-msi", ram:"16-ddr4-3200", gpu:"rtx5060", storage:"ssd-512-gen4", psu:"650w-gold", cooling:"air-assassin", case:"case-nzxt-h5" },
       mid:    { cpu:"r7-7800x3d", motherboard:"b650e-msi", ram:"32-ddr5-6000", gpu:"rx9070xt", storage:"ssd-1to-wd", psu:"850w-gold", cooling:"aio-240", case:"case-meshify" },
       high:   { cpu:"r7-9800x3d", motherboard:"x670-gigabyte", ram:"32-ddr5-6400", gpu:"rtx5080", storage:"ssd-2to-gen4", psu:"1000w-plat", cooling:"aio-360-corsair", case:"case-o11" },
