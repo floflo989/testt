@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MLTeC — Configurateur PC 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #60a5fa;
+      --purple: #c084fc;
+      --dark-1: #0b1120;
+      --dark-2: #111827;
+      --dark-3: #172554;
+      --dark-4: #1e1b4b;
+      --card-bg: rgba(17,25,40,0.78);
+      --card-border: rgba(96,165,250,0.18);
+      --text-muted: #94a3b8;
+      --green: #4ade80;
+      --yellow: #fbbf24;
+      --red: #f87171;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: linear-gradient(-45deg, var(--dark-1), var(--dark-2), var(--dark-3), var(--dark-4));
+      background-size: 400% 400%;
+      animation: gradientMove 15s ease infinite;
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientMove {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      text-align: center;
+      padding: 60px 5% 40px;
+      position: relative;
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 52px;
+      font-weight: 900;
+      background: linear-gradient(90deg, #ffffff, #60a5fa, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 6px;
+      text-shadow: none;
+      animation: logoPulse 3s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1); filter: brightness(1); }
+      50%       { transform: scale(1.03); filter: brightness(1.1); }
+    }
+
+    .logo-tagline {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      letter-spacing: 5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .header-title {
+      margin-top: 24px;
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .header-sub {
+      margin-top: 8px;
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+
+    .update-pill {
+      display: inline-block;
+      margin-top: 14px;
+      background: rgba(34,197,94,.15);
+      border: 1px solid rgba(34,197,94,.3);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 5px 16px;
+      border-radius: 20px;
+      letter-spacing: 1px;
+    }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(96,165,250,.4), rgba(192,132,252,.4), transparent);
+      margin: 10px 5%;
+    }
+
+    /* ─── MAIN CONTAINER ─── */
+    .container { padding: 30px 5% 60px; }
+
+    /* ─── PRESETS ─── */
+    .presets-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .presets {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+
+    .preset-btn {
+      padding: 10px 22px;
+      border-radius: 22px;
+      border: 1px solid rgba(96,165,250,.3);
+      background: rgba(17,25,40,.6);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      transition: all .3s ease;
+    }
+
+    .preset-btn:hover {
+      border-color: rgba(96,165,250,.6);
+      color: white;
+    }
+
+    .preset-btn.active {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 4px 20px rgba(59,130,246,.3);
+    }
+
+    /* ─── COMPONENT GRID ─── */
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    /* ─── CARD ─── */
+    .card {
+      position: relative;
+      background: var(--card-bg);
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      padding: 22px;
+      transition: transform .35s ease, box-shadow .35s ease;
+      overflow: hidden;
+    }
+
+	.card::before {
+	  content: "";
+	  position: absolute;
+	  top: -100%;
+	  left: -100%;
+	  width: 200%;
+	  height: 200%;
+	  background: linear-gradient(
+		120deg,
+		transparent,
+		rgba(255,255,255,.06),
+		transparent
+	  );
+	  transform: rotate(25deg);
+	  transition: .7s ease;
+
+	  pointer-events: none; /* ← IMPORTANT */
+	}
+
+    .card:hover::before { top: -20%; left: -20%; }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px rgba(0,0,0,.35), 0 0 22px rgba(59,130,246,.18);
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .card-icon {
+      width: 38px; height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .card-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--blue);
+      text-transform: uppercase;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.2;
+    }
+
+    select {
+      width: 100%;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(96,165,250,.22);
+      border-radius: 10px;
+      color: white;
+      padding: 10px 13px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      transition: border-color .3s;
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2360a5fa' stroke-width='2'%3E%3Cpolyline points='6,9 12,15 18,9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    select:hover, select:focus { border-color: rgba(96,165,250,.6); }
+    select option { background: #1e293b; color: white; font-weight: 600; }
+    optgroup { color: #60a5fa; font-size: 11px; }
+
+    .info-box {
+      margin-top: 10px;
+      padding: 10px 13px;
+      background: rgba(59,130,246,.08);
+      border-left: 2px solid rgba(96,165,250,.4);
+      border-radius: 0 9px 9px 0;
+      font-size: 13px;
+      color: #93c5fd;
+      min-height: 40px;
+      line-height: 1.5;
+      font-weight: 500;
+      transition: all .3s;
+    }
+
+    .info-box.empty { color: #475569; border-color: rgba(255,255,255,.1); background: rgba(255,255,255,.03); }
+    .info-box.warning { background: rgba(251,191,36,.08); border-color: rgba(251,191,36,.4); color: var(--yellow); }
+
+    /* ─── SUMMARY ─── */
+    .summary-wrapper {
+      background: var(--card-bg);
+      border-radius: 24px;
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .summary-wrapper::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, rgba(59,130,246,.0), rgba(59,130,246,.2), rgba(192,132,252,.1), rgba(59,130,246,.0));
+      z-index: -1;
+      filter: blur(20px);
+      opacity: .6;
+    }
+
+    .sum-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .sum-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #60a5fa, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+    }
+
+    .reset-btn {
+      padding: 8px 18px;
+      border: 1px solid rgba(96,165,250,.3);
+      border-radius: 18px;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .3s;
+    }
+
+    .reset-btn:hover { border-color: rgba(96,165,250,.6); color: white; }
+
+    .sum-rows { margin-bottom: 20px; }
+
+    .sum-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      font-size: 14px;
+      font-weight: 600;
+      animation: fadeIn .3s ease;
+    }
+
+    @keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+
+    .sum-row:last-child { border-bottom: none; }
+    .sum-name { color: #d1d1d1; }
+    .sum-price { color: var(--blue); font-weight: 700; }
+
+    .sum-empty { color: #475569; font-size: 14px; padding: 10px 0; }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 18px;
+      border-top: 1px solid rgba(96,165,250,.25);
+      margin-bottom: 20px;
+    }
+
+    .total-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 2px;
+    }
+
+    .total-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 30px;
+      font-weight: 900;
+      background: linear-gradient(90deg, #60a5fa, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ─── PERFORMANCE BAR ─── */
+    .perf-section { margin-bottom: 20px; }
+
+    .perf-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .perf-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .perf-score {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 12px;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .bar-track {
+      background: rgba(255,255,255,.09);
+      border-radius: 99px;
+      height: 8px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #c084fc);
+      transition: width .8s cubic-bezier(.4,0,.2,1);
+    }
+
+    .perf-desc {
+      font-size: 13px;
+      color: var(--blue);
+      font-weight: 600;
+      letter-spacing: .5px;
+    }
+
+    /* ─── COMPAT BADGES ─── */
+    .compat-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      min-height: 28px;
+    }
+
+    .badge {
+      padding: 5px 13px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      animation: fadeIn .3s ease;
+    }
+
+    .badge-ok   { background: rgba(34,197,94,.14);  border: 1px solid rgba(34,197,94,.3);  color: var(--green);  }
+    .badge-warn { background: rgba(251,191,36,.14); border: 1px solid rgba(251,191,36,.3); color: var(--yellow); }
+    .badge-err  { background: rgba(239,68,68,.14);  border: 1px solid rgba(239,68,68,.3);  color: var(--red);    }
+
+    /* ─── CTA BUTTON ─── */
+    .cta-btn {
+      width: 100%;
+      padding: 17px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: transform .3s, box-shadow .3s;
+      text-transform: uppercase;
+    }
+
+    .cta-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 32px rgba(59,130,246,.38);
+    }
+
+    /* ─── NOTE ─── */
+    .price-note {
+      text-align: center;
+      font-size: 12px;
+      color: #475569;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    .price-note span { color: var(--yellow); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center;
+      padding: 30px 5%;
+      border-top: 1px solid rgba(96,165,250,.1);
+      color: #334155;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    footer span {
+      background: linear-gradient(90deg, #60a5fa, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .logo { font-size: 36px; }
+      .header-title { font-size: 22px; }
+      .total-value { font-size: 24px; }
+      .comp-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">MLTeC</div>
+    <p class="logo-tagline">Montage · Expertise · Technologie</p>
+    <h1 class="header-title">Configurateur PC 2026</h1>
+    <p class="header-sub">Compose ta machine idéale — compatibilité vérifiée en temps réel</p>
+    <div class="update-pill">✔ Base de données mise à jour — Mai 2026 · 60+ composants</div>
+  </header>
+
+  <div class="divider"></div>
+
+  <div class="container">
+
+    <!-- PRESETS -->
+    <p class="presets-label">Configurations prédéfinies</p>
+    <div class="presets">
+      <button class="preset-btn active" onclick="setPreset('custom',this)">⚙ Personnalisé</button>
+      <button class="preset-btn" onclick="setPreset('budget',this)">🎮 Budget 1080p</button>
+      <button class="preset-btn" onclick="setPreset('mid',this)">🔥 Équilibré 1440p</button>
+      <button class="preset-btn" onclick="setPreset('high',this)">⚡ High-end 4K</button>
+      <button class="preset-btn" onclick="setPreset('ultra',this)">💎 Ultra / Créateur</button>
+    </div>
+
+    <!-- COMPOSANTS GRID -->
+    <div class="comp-grid" id="compGrid"></div>
+
+    <!-- SUMMARY -->
+    <div class="summary-wrapper">
+      <div class="sum-header">
+        <div class="sum-title">RÉCAPITULATIF</div>
+        <button class="reset-btn" onclick="resetAll()">↺ Réinitialiser</button>
+      </div>
+
+      <div class="sum-rows" id="sumRows">
+        <p class="sum-empty">Aucun composant sélectionné</p>
+      </div>
+
+      <div class="total-row">
+        <span class="total-label">TOTAL</span>
+        <span class="total-value" id="totalVal">0 €</span>
+      </div>
+
+      <div class="perf-section">
+        <div class="perf-header">
+          <span class="perf-label">Score Performance</span>
+          <span class="perf-score" id="perfScore">—</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" id="perfBar" style="width:0%"></div>
+        </div>
+        <div class="perf-desc" id="perfDesc">Sélectionne des composants pour commencer</div>
+      </div>
+
+      <div class="compat-badges" id="compatBadges"></div>
+
+      <button class="cta-btn" onclick="contactMLTeC()">
+        Contacter MLTeC pour ma config →
+      </button>
+
+      <p class="price-note">
+        Prix indicatifs basés sur le marché français — Mai 2026<br>
+        <span>⚠ La RAM DDR5 et les SSD NVMe sont en forte hausse en 2026</span>
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    Configurateur by <span>MLTeC</span> · Montage · Expertise · Technologie · 2026
+  </footer>
+
+  <script>
+    const DB = {
+      cpu: {
+        label: "Processeur (CPU)", icon: "⚙️", sublabel: "Socket & fréquence",
+        items: [
+          {id:"none",name:"-- Choisir un CPU --",price:0,info:"",socket:"",tdp:0,perf:0},
+          // AM4
+          {id:"g1",name:"──── AM4 — Ryzen 5000 ────",price:0,info:"",socket:"",tdp:0,perf:0,grp:true},
+          {id:"r5-5600",name:"AMD Ryzen 5 5600",price:89,info:"6c/12t · 4.4 GHz boost · AM4 · 65W · DDR4 — excellent rapport qualité/prix",socket:"AM4",tdp:65,perf:42},
+          {id:"r5-5600x",name:"AMD Ryzen 5 5600X",price:109,info:"6c/12t · 4.6 GHz boost · AM4 · 65W · DDR4",socket:"AM4",tdp:65,perf:46},
+          {id:"r7-5700x",name:"AMD Ryzen 7 5700X",price:139,info:"8c/16t · 4.6 GHz boost · AM4 · 65W · DDR4",socket:"AM4",tdp:65,perf:54},
+          // AM5
+          {id:"g2",name:"──── AM5 — Ryzen 7000 / 9000 ────",price:0,info:"",socket:"",tdp:0,perf:0,grp:true},
+          {id:"r5-7600",name:"AMD Ryzen 5 7600",price:159,info:"6c/12t · 5.1 GHz boost · AM5 · 65W · DDR5 — bon entrée AM5",socket:"AM5",tdp:65,perf:52},
+          {id:"r5-9600x",name:"AMD Ryzen 5 9600X",price:229,info:"6c/12t · 5.4 GHz boost · AM5 · 65W · Zen 5 — très efficace",socket:"AM5",tdp:65,perf:62},
+          {id:"r7-9700x",name:"AMD Ryzen 7 9700X",price:319,info:"8c/16t · 5.5 GHz boost · AM5 · 65W · Zen 5 — polyvalent",socket:"AM5",tdp:65,perf:72},
+          {id:"r7-7800x3d",name:"AMD Ryzen 7 7800X3D",price:329,info:"8c/16t · 5.0 GHz · AM5 · 120W · 3D V-Cache — roi gaming 1080p",socket:"AM5",tdp:120,perf:85},
+          {id:"r7-9800x3d",name:"AMD Ryzen 7 9800X3D ⭐",price:489,info:"8c/16t · 5.2 GHz · AM5 · 120W · 3D V-Cache gen2 — meilleur CPU gaming 2026",socket:"AM5",tdp:120,perf:95},
+          {id:"r9-9900x",name:"AMD Ryzen 9 9900X",price:429,info:"12c/24t · 5.6 GHz · AM5 · 120W · Zen 5 — création de contenu",socket:"AM5",tdp:120,perf:82},
+          {id:"r9-9950x",name:"AMD Ryzen 9 9950X",price:649,info:"16c/32t · 5.7 GHz · AM5 · 170W · Zen 5 — workstation pro",socket:"AM5",tdp:170,perf:90},
+          {id:"r9-9950x3d",name:"AMD Ryzen 9 9950X3D",price:849,info:"16c/32t · 5.7 GHz · AM5 · V-Cache gen2 — ultime 2026",socket:"AM5",tdp:170,perf:98},
+          // Intel LGA1700
+          {id:"g3",name:"──── LGA1700 — Intel 12e / 14e gen ────",price:0,info:"",socket:"",tdp:0,perf:0,grp:true},
+          {id:"i3-14100f",name:"Intel Core i3-14100F",price:99,info:"4c/8t · 4.7 GHz · LGA1700 · 58W — budget bureau",socket:"LGA1700",tdp:58,perf:35},
+          {id:"i5-14600kf",name:"Intel Core i5-14600KF",price:219,info:"14c (6P+8E) · 5.3 GHz · LGA1700 · 125W — polyvalent streaming",socket:"LGA1700",tdp:125,perf:65},
+          {id:"i7-14700kf",name:"Intel Core i7-14700KF",price:329,info:"20c (8P+12E) · 5.6 GHz · LGA1700 · 125W — multitâche/streaming",socket:"LGA1700",tdp:125,perf:78},
+          {id:"i9-14900k",name:"Intel Core i9-14900K",price:479,info:"24c (8P+16E) · 6.0 GHz · LGA1700 · 253W — flagship 14e gen",socket:"LGA1700",tdp:253,perf:88},
+          // Intel LGA1851
+          {id:"g4",name:"──── LGA1851 — Intel Arrow Lake ────",price:0,info:"",socket:"",tdp:0,perf:0,grp:true},
+          {id:"i5-245k",name:"Intel Core Ultra 5 245K",price:279,info:"14c (6P+8E) · 5.2 GHz · LGA1851 · 125W · Arrow Lake",socket:"LGA1851",tdp:125,perf:60},
+          {id:"i7-265k",name:"Intel Core Ultra 7 265K",price:399,info:"20c (8P+12E) · 5.5 GHz · LGA1851 · 125W · Arrow Lake",socket:"LGA1851",tdp:125,perf:75},
+          {id:"i9-285k",name:"Intel Core Ultra 9 285K",price:529,info:"24c (8P+16E) · 5.7 GHz · LGA1851 · 253W — workstation/streaming",socket:"LGA1851",tdp:253,perf:88},
+        ]
+      },
+
+      motherboard: {
+        label: "Carte mère", icon: "🟩", sublabel: "Socket & chipset",
+        items: [
+          {id:"none",name:"-- Choisir une carte mère --",price:0,info:"",socket:""},
+          // AM4
+          {id:"g1",name:"──── AM4 (Ryzen 5000) ────",price:0,info:"",socket:"",grp:true},
+          {id:"b450-msi",name:"MSI B450M PRO-VDH MAX",price:69,info:"AM4 · DDR4 · PCIe 3.0 · mATX — budget Ryzen 5000",socket:"AM4"},
+          {id:"b550-asrock",name:"ASRock B550 Steel Legend",price:99,info:"AM4 · DDR4 · PCIe 4.0 · ATX — solide rapport qualité/prix",socket:"AM4"},
+          {id:"x570-asus",name:"ASUS TUF Gaming X570-Plus WiFi",price:149,info:"AM4 · DDR4 · PCIe 4.0 · Wi-Fi · ATX — haut de gamme AM4",socket:"AM4"},
+          // AM5
+          {id:"g2",name:"──── AM5 (Ryzen 7000/9000/X3D) ────",price:0,info:"",socket:"",grp:true},
+          {id:"b650-asrock",name:"ASRock B650M Pro RS WiFi",price:149,info:"AM5 · DDR5 · PCIe 5.0 · Wi-Fi 6 · mATX — entrée AM5",socket:"AM5"},
+          {id:"b650e-msi",name:"MSI MAG B650 TOMAHAWK WiFi ⭐",price:189,info:"AM5 · DDR5 · PCIe 5.0 · Wi-Fi 6E · ATX — recommandé mid-range",socket:"AM5"},
+          {id:"x670-gigabyte",name:"Gigabyte X670E AORUS Elite AX",price:289,info:"AM5 · DDR5 · PCIe 5.0 · Wi-Fi 6E · USB 4 · ATX",socket:"AM5"},
+          {id:"x670e-asus",name:"ASUS ROG Strix X670E-F Gaming",price:359,info:"AM5 · DDR5 · PCIe 5.0 · Wi-Fi 6E · Thunderbolt 4 · ATX premium",socket:"AM5"},
+          {id:"x870-asus",name:"ASUS ROG Crosshair X870E Hero",price:499,info:"AM5 · DDR5 · PCIe 5.0 · Wi-Fi 7 · USB 4 · flagship AM5 2025",socket:"AM5"},
+          // LGA1700
+          {id:"g3",name:"──── LGA1700 (Intel 12e-14e gen) ────",price:0,info:"",socket:"",grp:true},
+          {id:"b760-msi",name:"MSI PRO B760M-A WiFi DDR5",price:129,info:"LGA1700 · DDR5 · PCIe 4.0 · Wi-Fi 6 · mATX",socket:"LGA1700"},
+          {id:"z790-gigabyte",name:"Gigabyte Z790 AORUS Elite AX DDR5 ⭐",price:279,info:"LGA1700 · DDR5 · PCIe 5.0 · Wi-Fi 6E · ATX — recommandé",socket:"LGA1700"},
+          {id:"z790-asus",name:"ASUS ROG Maximus Z790 Hero",price:549,info:"LGA1700 · DDR5 · PCIe 5.0 · Wi-Fi 6E · flagship Intel",socket:"LGA1700"},
+          // LGA1851
+          {id:"g4",name:"──── LGA1851 (Intel Arrow Lake) ────",price:0,info:"",socket:"",grp:true},
+          {id:"z890-msi",name:"MSI MAG Z890 TOMAHAWK WiFi",price:239,info:"LGA1851 · DDR5 · PCIe 5.0 · Wi-Fi 7 · ATX — recommandé Arrow Lake",socket:"LGA1851"},
+          {id:"z890-asus",name:"ASUS ROG Strix Z890-F Gaming",price:399,info:"LGA1851 · DDR5 · PCIe 5.0 · Wi-Fi 7 · Thunderbolt 5 · ATX",socket:"LGA1851"},
+        ]
+      },
+
+      ram: {
+        label: "Mémoire RAM", icon: "🔵", sublabel: "Capacité & fréquence",
+        items: [
+          {id:"none",name:"-- Choisir de la RAM --",price:0,info:"",perf:0},
+          {id:"g1",name:"──── DDR4 (AM4 / cartes mères DDR4) ────",price:0,info:"",perf:0,grp:true},
+          {id:"16-ddr4-3200",name:"16 Go DDR4-3200 (2×8 Go)",price:35,info:"DDR4 3200 MHz · CL16 · Corsair Vengeance — budget",perf:5},
+          {id:"32-ddr4-3600",name:"32 Go DDR4-3600 (2×16 Go) ⭐",price:59,info:"DDR4 3600 MHz · CL18 · G.Skill Ripjaws V — recommandé AM4",perf:10},
+          {id:"64-ddr4-3600",name:"64 Go DDR4-3600 (2×32 Go)",price:99,info:"DDR4 3600 MHz · CL18 · workstation AM4",perf:10},
+          {id:"g2",name:"──── DDR5 ⚠ Prix en hausse 2026 ────",price:0,info:"",perf:0,grp:true},
+          {id:"16-ddr5-5600",name:"16 Go DDR5-5600 (2×8 Go)",price:85,info:"DDR5 5600 MHz · CL40 · Kingston Fury Beast — entrée DDR5",perf:10},
+          {id:"32-ddr5-6000",name:"32 Go DDR5-6000 (2×16 Go) ⭐",price:130,info:"DDR5 6000 MHz · CL30 EXPO · G.Skill Trident Z5 — sweet spot AM5",perf:22},
+          {id:"32-ddr5-6400",name:"32 Go DDR5-6400 (2×16 Go)",price:145,info:"DDR5 6400 MHz · CL32 · Corsair Dominator Titanium",perf:24},
+          {id:"48-ddr5-6000",name:"48 Go DDR5-6000 (2×24 Go)",price:175,info:"DDR5 6000 MHz · CL30 · G.Skill — compromis capacité/vitesse",perf:22},
+          {id:"64-ddr5-6000",name:"64 Go DDR5-6000 (2×32 Go)",price:260,info:"DDR5 6000 MHz · CL30 · Corsair — création contenu",perf:22},
+          {id:"32-ddr5-7200",name:"32 Go DDR5-7200 (2×16 Go)",price:195,info:"DDR5 7200 MHz · CL34 — perf max Intel Arrow Lake",perf:28},
+          {id:"64-ddr5-7200",name:"64 Go DDR5-7200 (2×32 Go)",price:380,info:"DDR5 7200 MHz · CL34 — workstation ultra haut de gamme",perf:28},
+        ]
+      },
+
+      gpu: {
+        label: "Carte graphique (GPU)", icon: "🎮", sublabel: "VRAM & résolution cible",
+        items: [
+          {id:"none",name:"-- Choisir un GPU --",price:0,info:"",perf:0,tdp:0},
+          {id:"g1",name:"──── Entrée de gamme / 1080p ────",price:0,info:"",perf:0,tdp:0,grp:true},
+          {id:"arc-b580",name:"Intel Arc B580",price:319,info:"12 Go GDDR6 · 1080p gaming · XeSS · 190W — bon rapport Q/P",perf:42,tdp:190},
+          {id:"rx9060",name:"AMD Radeon RX 9060",price:339,info:"8 Go GDDR6 · 1080p · FSR 4 · 150W — entrée RDNA4",perf:45,tdp:150},
+          {id:"rtx5060",name:"NVIDIA RTX 5060",price:315,info:"8 Go GDDR7 · 1080p gaming · DLSS 4 · 150W — Blackwell entrée",perf:48,tdp:150},
+          {id:"g2",name:"──── Milieu de gamme / 1080p-1440p ────",price:0,info:"",perf:0,tdp:0,grp:true},
+          {id:"rx9060xt",name:"AMD RX 9060 XT 16 Go ⭐",price:419,info:"16 Go GDDR6 · 1080p/1440p · FSR 4 · 180W — meilleur rapport Q/P 2026",perf:58,tdp:180},
+          {id:"rtx5060ti",name:"NVIDIA RTX 5060 Ti 16 Go",price:549,info:"16 Go GDDR7 · 1080p/1440p · DLSS 4 · 180W",perf:60,tdp:180},
+          {id:"g3",name:"──── 1440p gaming ────",price:0,info:"",perf:0,tdp:0,grp:true},
+          {id:"rx9070",name:"AMD Radeon RX 9070",price:629,info:"16 Go GDDR6 · 1440p · FSR 4 · 220W — excellent 1440p",perf:72,tdp:220},
+          {id:"rtx5070",name:"NVIDIA RTX 5070",price:599,info:"12 Go GDDR7 · 1440p gaming · DLSS 4 Multi Frame Gen · 200W",perf:74,tdp:200},
+          {id:"rx9070xt",name:"AMD RX 9070 XT ⭐",price:679,info:"16 Go GDDR6 · 1440p haut de gamme · FSR 4 · 304W — surprise 2026",perf:80,tdp:304},
+          {id:"rtx5070ti",name:"NVIDIA RTX 5070 Ti",price:935,info:"16 Go GDDR7 · 1440p/4K · DLSS 4 · 285W",perf:83,tdp:285},
+          {id:"g4",name:"──── 4K gaming ────",price:0,info:"",perf:0,tdp:0,grp:true},
+          {id:"rtx5080",name:"NVIDIA RTX 5080",price:1199,info:"16 Go GDDR7 · 4K gaming · DLSS 4 · 320W — 4K minimum recommandé",perf:92,tdp:320},
+          {id:"rtx5090",name:"NVIDIA RTX 5090",price:3335,info:"32 Go GDDR7 · 4K Ultra · DLSS 4 · 575W — GPU le plus puissant du monde",perf:100,tdp:575},
+          {id:"g5",name:"──── Génération précédente ────",price:0,info:"",perf:0,tdp:0,grp:true},
+          {id:"rtx4070s",name:"NVIDIA RTX 4070 Super (recond.)",price:449,info:"12 Go GDDR6X · 1440p · DLSS 3 · 220W — encore compétitif",perf:65,tdp:220},
+          {id:"rtx4070ti",name:"NVIDIA RTX 4070 Ti Super (recond.)",price:549,info:"16 Go GDDR6X · 1440p/4K · DLSS 3.5 · 285W",perf:72,tdp:285},
+          {id:"rx7900xt",name:"AMD RX 7900 XT (recond.)",price:489,info:"20 Go GDDR6 · 1440p/4K · FSR 3 · 315W",perf:70,tdp:315},
+        ]
+      },
+
+      storage: {
+        label: "Stockage (SSD)", icon: "💾", sublabel: "Capacité & génération PCIe",
+        items: [
+          {id:"none",name:"-- Choisir un SSD --",price:0,info:"",perf:0},
+          {id:"g1",name:"──── ⚠ Prix SSD en forte hausse 2026 ────",price:0,info:"",perf:0,grp:true},
+          {id:"ssd-512-gen4",name:"512 Go NVMe Gen4 (Samsung 980 Pro)",price:89,info:"7000 Mo/s lecture · PCIe 4.0 · M.2 2280",perf:5},
+          {id:"ssd-1to-wd",name:"1 To NVMe Gen4 (WD Black SN850X) ⭐",price:149,info:"7300 Mo/s lecture · PCIe 4.0 · M.2 2280 — recommandé",perf:8},
+          {id:"ssd-1to-sam",name:"1 To NVMe Gen4 (Samsung 990 Pro)",price:159,info:"7450 Mo/s lecture · PCIe 4.0 · M.2 2280",perf:8},
+          {id:"ssd-1to-sea",name:"1 To NVMe Gen4 (Seagate FireCuda 530)",price:149,info:"7300 Mo/s lecture · PCIe 4.0 · M.2 2280",perf:8},
+          {id:"ssd-2to-gen4",name:"2 To NVMe Gen4 (WD Black SN850X)",price:259,info:"7300 Mo/s lecture · PCIe 4.0 · M.2 2280",perf:8},
+          {id:"ssd-4to-gen4",name:"4 To NVMe Gen4 (WD Black SN850X)",price:489,info:"7300 Mo/s lecture · PCIe 4.0 · 4 To — création contenu",perf:8},
+          {id:"g2",name:"──── NVMe Gen5 — ultra rapide ────",price:0,info:"",perf:0,grp:true},
+          {id:"ssd-1to-gen5",name:"1 To NVMe Gen5 (Crucial T705)",price:189,info:"14500 Mo/s lecture · PCIe 5.0 · ultra rapide 2026",perf:12},
+          {id:"ssd-2to-gen5",name:"2 To NVMe Gen5 (WD Black SN850X G2)",price:349,info:"14000 Mo/s lecture · PCIe 5.0 · M.2 2280",perf:12},
+          {id:"g3",name:"──── Stockage secondaire HDD ────",price:0,info:"",perf:0,grp:true},
+          {id:"hdd-2to",name:"2 To HDD (Seagate Barracuda)",price:49,info:"2 To · 7200 RPM · SATA — stockage de masse",perf:1},
+          {id:"hdd-4to",name:"4 To HDD (WD Blue)",price:79,info:"4 To · 5400 RPM · SATA — grande capacité",perf:1},
+          {id:"hdd-8to",name:"8 To HDD (Seagate IronWolf)",price:149,info:"8 To · 7200 RPM · SATA — archivage/NAS",perf:1},
+        ]
+      },
+
+      psu: {
+        label: "Alimentation (PSU)", icon: "⚡", sublabel: "Puissance & certification",
+        items: [
+          {id:"none",name:"-- Choisir une alimentation --",price:0,info:"",watts:0,perf:0},
+          {id:"g1",name:"──── Entrée / milieu de gamme ────",price:0,info:"",watts:0,perf:0,grp:true},
+          {id:"550w-bronze",name:"550W 80+ Bronze (Corsair CV550)",price:59,info:"550W · 80+ Bronze · Non modulaire — budget strict",watts:550,perf:0},
+          {id:"650w-gold",name:"650W 80+ Gold (Be Quiet! Pure Power 12)",price:89,info:"650W · 80+ Gold · Semi-modulaire",watts:650,perf:0},
+          {id:"750w-gold",name:"750W 80+ Gold (Corsair RM750x) ⭐",price:109,info:"750W · 80+ Gold · Full modulaire — recommandé mid-range",watts:750,perf:0},
+          {id:"g2",name:"──── Haut de gamme ────",price:0,info:"",watts:0,perf:0,grp:true},
+          {id:"850w-gold",name:"850W 80+ Gold (Seasonic Focus GX-850)",price:129,info:"850W · 80+ Gold · Full modulaire — RTX 5070 Ti et 5080",watts:850,perf:0},
+          {id:"1000w-gold",name:"1000W 80+ Gold (ASUS ROG STRIX)",price:169,info:"1000W · 80+ Gold · Full modulaire",watts:1000,perf:0},
+          {id:"1000w-plat",name:"1000W 80+ Platinum (Seasonic PRIME)",price:199,info:"1000W · 80+ Platinum · Full modulaire — ultra efficace",watts:1000,perf:0},
+          {id:"g3",name:"──── Ultra / RTX 5090 ────",price:0,info:"",watts:0,perf:0,grp:true},
+          {id:"1200w-plat",name:"1200W 80+ Platinum (Be Quiet! Dark Power 13)",price:249,info:"1200W · 80+ Platinum — RTX 5080 + CPU haute consommation",watts:1200,perf:0},
+          {id:"1600w-plat",name:"1600W 80+ Platinum (Seasonic PRIME TX-1600)",price:389,info:"1600W · 80+ Platinum — requis RTX 5090 overclockée",watts:1600,perf:0},
+        ]
+      },
+
+      cooling: {
+        label: "Refroidissement CPU", icon: "❄️", sublabel: "Air ou watercooling",
+        items: [
+          {id:"none",name:"-- Choisir un refroidissement --",price:0,info:"",perf:0},
+          {id:"g1",name:"──── Air cooling ────",price:0,info:"",perf:0,grp:true},
+          {id:"air-budget",name:"Cooler Master Hyper 212 Black",price:35,info:"Air cooling · 150W TDP max · silencieux — entrée de gamme",perf:0},
+          {id:"air-assassin",name:"Thermalright Peerless Assassin 120 SE ⭐",price:39,info:"Air cooling · 260W TDP max · très silencieux — meilleur Q/P 2026",perf:0},
+          {id:"air-noctua",name:"Noctua NH-D15 G2",price:109,info:"Air cooling premium · 300W TDP max · ultra silencieux",perf:0},
+          {id:"air-bequiet",name:"Be Quiet! Dark Rock Pro 5",price:89,info:"Air cooling · 270W TDP max · silencieux — très bien fini",perf:0},
+          {id:"g2",name:"──── AIO Watercooling ────",price:0,info:"",perf:0,grp:true},
+          {id:"aio-240",name:"AIO 240mm (ARCTIC Liquid Freezer III) ⭐",price:79,info:"Watercooling · 240mm · 300W TDP max — meilleur Q/P AIO",perf:0},
+          {id:"aio-280",name:"AIO 280mm (Be Quiet! Pure Loop 2 FX)",price:99,info:"Watercooling · 280mm · 320W TDP max",perf:0},
+          {id:"aio-360-corsair",name:"AIO 360mm (Corsair iCUE H150i Elite)",price:149,info:"Watercooling · 360mm · 400W TDP max · RGB — populaire 2026",perf:0},
+          {id:"aio-360-asus",name:"AIO 360mm (ASUS ROG RYUJIN III)",price:199,info:"Watercooling · 360mm · 400W TDP max · LCD écran · RGB premium",perf:0},
+          {id:"g3",name:"──── Custom loop ────",price:0,info:"",perf:0,grp:true},
+          {id:"custom-360",name:"Kit custom 360mm (EK Basic Kit)",price:299,info:"Watercooling custom · 500W+ TDP max · silencieux absolu",perf:0},
+        ]
+      },
+
+      case: {
+        label: "Boîtier", icon: "🖥️", sublabel: "Format & airflow",
+        items: [
+          {id:"none",name:"-- Choisir un boîtier --",price:0,info:"",perf:0},
+          {id:"g1",name:"──── Budget / Compact ────",price:0,info:"",perf:0,grp:true},
+          {id:"case-fractal-core",name:"Fractal Design Core 1000",price:49,info:"mATX · Mini-Tower · Bon airflow — budget",perf:0},
+          {id:"case-nzxt-h5",name:"NZXT H5 Flow",price:99,info:"ATX · Mid-Tower · Excellent airflow · panneau verre trempé",perf:0},
+          {id:"case-corsair-4000d",name:"Corsair 4000D Airflow",price:99,info:"ATX · Mid-Tower · Airflow optimisé · cable management",perf:0},
+          {id:"g2",name:"──── Milieu de gamme ────",price:0,info:"",perf:0,grp:true},
+          {id:"case-meshify",name:"Fractal Design Meshify 2 Compact ⭐",price:109,info:"ATX · Mid-Tower · Airflow mesh exceptionnel — recommandé",perf:0},
+          {id:"case-h7",name:"NZXT H7 Flow",price:139,info:"ATX · Mid-Tower · Airflow premium · RGB — populaire 2026",perf:0},
+          {id:"case-define",name:"Fractal Design Define 7",price:149,info:"ATX · Mid-Tower · Silencieux · isolation phonique — setup calme",perf:0},
+          {id:"g3",name:"──── Haut de gamme / RGB ────",price:0,info:"",perf:0,grp:true},
+          {id:"case-o11",name:"Lian Li O11 Dynamic EVO",price:159,info:"ATX/E-ATX · Mid-Tower · Parfait pour custom loop · showcase",perf:0},
+          {id:"case-phanteks",name:"Phanteks Enthoo Pro 2",price:189,info:"E-ATX · Full-Tower · Spacieux · excellente ventilation",perf:0},
+          {id:"case-rog",name:"ASUS ROG Hyperion GR701",price:299,info:"E-ATX · Full-Tower · RGB · pour configs ultra haut de gamme",perf:0},
+        ]
+      }
+    };
+
+    const state = {};
+    Object.keys(DB).forEach(k => state[k] = "none");
+
+    const presets = {
+      budget: { cpu:"r5-5600", motherboard:"b450-msi", ram:"16-ddr4-3200", gpu:"rtx5060", storage:"ssd-512-gen4", psu:"650w-gold", cooling:"air-assassin", case:"case-nzxt-h5" },
+      mid:    { cpu:"r7-7800x3d", motherboard:"b650e-msi", ram:"32-ddr5-6000", gpu:"rx9070xt", storage:"ssd-1to-wd", psu:"850w-gold", cooling:"aio-240", case:"case-meshify" },
+      high:   { cpu:"r7-9800x3d", motherboard:"x670-gigabyte", ram:"32-ddr5-6400", gpu:"rtx5080", storage:"ssd-2to-gen4", psu:"1000w-plat", cooling:"aio-360-corsair", case:"case-o11" },
+      ultra:  { cpu:"r9-9950x3d", motherboard:"x870-asus", ram:"64-ddr5-7200", gpu:"rtx5090", storage:"ssd-2to-gen5", psu:"1600w-plat", cooling:"custom-360", case:"case-rog" }
+    };
+
+    function setPreset(p, btn) {
+      document.querySelectorAll(".preset-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      if (p === "custom") { resetAll(); return; }
+      const pr = presets[p];
+      Object.entries(pr).forEach(([k, v]) => {
+        state[k] = v;
+        const el = document.getElementById("sel-" + k);
+        if (el) el.value = v;
+        updateInfo(k);
+      });
+      updateSummary();
+    }
+
+    function resetAll() {
+      Object.keys(state).forEach(k => {
+        state[k] = "none";
+        const el = document.getElementById("sel-" + k);
+        if (el) el.value = "none";
+        updateInfo(k);
+      });
+      updateSummary();
+    }
+
+    function buildGrid() {
+      const grid = document.getElementById("compGrid");
+      grid.innerHTML = "";
+      Object.entries(DB).forEach(([key, cat]) => {
+        const opts = cat.items.map(i => {
+          if (i.grp) return `<optgroup label="${i.name}"></optgroup>`;
+          return `<option value="${i.id}">${i.name}${i.price > 0 ? " — " + i.price + " €" : ""}</option>`;
+        }).join("");
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="card-head">
+            <div class="card-icon">${cat.icon}</div>
+            <div>
+              <div class="card-label">${cat.sublabel}</div>
+              <div class="card-title">${cat.label}</div>
+            </div>
+          </div>
+          <select id="sel-${key}" onchange="onSelect('${key}', this.value)">
+            ${opts}
+          </select>
+          <div class="info-box empty" id="info-${key}">Aucun composant sélectionné</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function onSelect(key, val) {
+      state[key] = val;
+      updateInfo(key);
+      updateSummary();
+    }
+
+    function getItem(key) {
+      return DB[key].items.find(i => i.id === state[key]);
+    }
+
+    function updateInfo(key) {
+      const item = getItem(key);
+      const el = document.getElementById("info-" + key);
+      if (!el) return;
+      if (!item || !item.info) {
+        el.textContent = "Aucun composant sélectionné";
+        el.className = "info-box empty";
+      } else {
+        el.textContent = item.info;
+        const isWarn = item.id && (item.id.includes("ddr5") || item.id.includes("gen5"));
+        el.className = "info-box" + (isWarn ? " warning" : "");
+      }
+    }
+
+    function updateSummary() {
+      let total = 0, perf = 0;
+      const rows = document.getElementById("sumRows");
+      rows.innerHTML = "";
+      let hasAny = false;
+
+      Object.entries(DB).forEach(([key, cat]) => {
+        const item = getItem(key);
+        if (item && item.price > 0) {
+          hasAny = true;
+          total += item.price;
+          perf += (item.perf || 0);
+          const r = document.createElement("div");
+          r.className = "sum-row";
+          r.innerHTML = `<span class="sum-name">${cat.icon} ${item.name.replace(" ⭐","")}</span><span class="sum-price">${item.price} €</span>`;
+          rows.appendChild(r);
+        }
+      });
+
+      if (!hasAny) {
+        rows.innerHTML = `<p class="sum-empty">Aucun composant sélectionné</p>`;
+      }
+
+      document.getElementById("totalVal").textContent = total > 0 ? total + " €" : "0 €";
+
+      const maxP = 290;
+      const pct = Math.min(100, Math.round(perf / maxP * 100));
+      document.getElementById("perfBar").style.width = pct + "%";
+      document.getElementById("perfScore").textContent = pct > 0 ? pct + " / 100" : "—";
+
+      const labels = ["","Config bureautique basique","Gaming 1080p entrée","Gaming 1080p solide","Gaming 1440p bon","Gaming 1440p high-end","4K gaming","Config 4K ultra","Config ultime — sans limite"];
+      const lbl = pct === 0 ? "Sélectionne des composants pour commencer"
+                : pct < 20 ? labels[1] : pct < 35 ? labels[2] : pct < 50 ? labels[3]
+                : pct < 62 ? labels[4] : pct < 75 ? labels[5] : pct < 85 ? labels[6]
+                : pct < 95 ? labels[7] : labels[8];
+      document.getElementById("perfDesc").textContent = lbl;
+
+      checkCompat();
+    }
+
+    function checkCompat() {
+      const b = document.getElementById("compatBadges");
+      b.innerHTML = "";
+
+      const cpu = getItem("cpu"), mb = getItem("motherboard"), psu = getItem("psu"), gpu = getItem("gpu"), cool = getItem("cooling");
+
+      // Socket CPU / carte mère
+      if (cpu && mb && cpu.id !== "none" && mb.id !== "none" && mb.socket) {
+        if (cpu.socket === mb.socket) {
+          addBadge(b, "✔ CPU + Carte mère compatibles", "badge-ok");
+        } else {
+          addBadge(b, "✘ Incompatibilité socket CPU / Carte mère", "badge-err");
+        }
+      }
+
+      // DDR4 sur carte mère DDR5 only
+      if (mb && mb.socket && mb.socket !== "AM4") {
+        const ram = getItem("ram");
+        if (ram && ram.id && ram.id.includes("ddr4")) {
+          addBadge(b, "⚠ Cette carte mère requiert de la DDR5", "badge-warn");
+        }
+      }
+
+      // Alimentation
+      if (psu && cpu && gpu && psu.watts > 0 && cpu.id !== "none" && gpu.id !== "none") {
+        const tdpTotal = (cpu.tdp || 0) + (gpu.tdp || 0) + 100;
+        if (tdpTotal < psu.watts * 0.75) {
+          addBadge(b, "✔ Alimentation suffisante", "badge-ok");
+        } else if (tdpTotal < psu.watts) {
+          addBadge(b, "⚠ Alimentation à la limite — prévoir plus grand", "badge-warn");
+        } else {
+          addBadge(b, "✘ Alimentation insuffisante — augmenter la puissance", "badge-err");
+        }
+      }
+
+      // Refroidissement / CPU TDP
+      if (cool && cpu && cool.id !== "none" && cpu.id !== "none") {
+        if (cpu.tdp >= 170 && (cool.id === "air-budget" || cool.id === "air-assassin")) {
+          addBadge(b, "⚠ Refroidissement insuffisant pour ce CPU", "badge-warn");
+        } else if (cool.id !== "none") {
+          addBadge(b, "✔ Refroidissement adapté", "badge-ok");
+        }
+      }
+
+      // Config complète
+      const sel = Object.values(state).filter(v => v !== "none").length;
+      if (sel >= 7) addBadge(b, "✔ Configuration complète", "badge-ok");
+    }
+
+    function addBadge(container, text, cls) {
+      const b = document.createElement("span");
+      b.className = "badge " + cls;
+      b.textContent = text;
+      container.appendChild(b);
+    }
+
+    function getSummaryText() {
+      const lines = [];
+      Object.entries(DB).forEach(([key, cat]) => {
+        const item = getItem(key);
+        if (item && item.price > 0) lines.push(cat.label + ": " + item.name.replace(" ⭐","") + " (" + item.price + "€)");
+      });
+      return lines.join(", ") || "Aucun composant sélectionné";
+    }
+
+    function contactMLTeC() {
+      const summary = getSummaryText();
+      const total = document.getElementById("totalVal").textContent;
+      const msg = encodeURIComponent("Bonjour MLTeC, je souhaite un devis pour la configuration suivante :\n" + getSummaryText().split(", ").join("\n") + "\n\nTotal estimé : " + total);
+      // Remplace l'adresse email par celle de MLTeC
+      window.location.href = "mailto:contact@mltec.fr?subject=Demande de devis configuration PC&body=" + msg;
+    }
+
+    buildGrid();
+    updateSummary();
+  </script>
+
+</body>
+</html>
