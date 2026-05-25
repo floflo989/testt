@@ -568,14 +568,6 @@
 
   <script>
 
-	
-	function sendHeight() {
-	  const height = document.body.scrollHeight;
-	  window.parent.postMessage(height, "*");
-	}
-	
-	window.onload = sendHeight;
-	window.onresize = sendHeight;
 	  
     const DB = {
       cpu: {
